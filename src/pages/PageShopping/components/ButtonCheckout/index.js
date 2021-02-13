@@ -22,16 +22,12 @@ export default (props = {}) => {
   const handleButtonCheckoutClick = () => {
     const productListArray = productList.split(",");
     const { productsData = {} } = props;
-    // console.log(productList);
-    // console.log(productListArray);
-    // console.log(productsData);
-    // console.log(" ");
+
     const processedProducts = utilGetProcessedProducts(
       productListArray,
       productsData
     );
 
-    // TODO: check the length of processedProducts ?
     setProcessedProducts(processedProducts);
     setPage(pages.PAGE_SHOPPING_CHECKOUT_RESULT);
   };

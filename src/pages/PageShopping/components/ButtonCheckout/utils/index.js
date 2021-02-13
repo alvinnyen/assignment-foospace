@@ -15,7 +15,6 @@ const loadProduct = (productListArray = [], productsData = {}) => {
 const getCampaigns = () => {
   // maybe need to get campaigns from somewhere in the future
   const campaigns = {
-    // TODO: check 名字在外還在內欄位好，欄位命名是否ＯＫ
     buyOneGetOneInHalfPrice: {
       desc: "同商品第 2 件 5 折",
       processFunc: buyOneGetOneInHalfPrice,
@@ -66,12 +65,14 @@ function buyOneGetOneInHalfPrice(productsToProcess = [], campaignNo = 0) {
     const curProduct = productsToProcessWithCampaignRule[i];
     const nexProduct = productsToProcessWithCampaignRule[i + 1];
 
+    [curProduct, nexProduct].forEach(
+      (product = {}) => (product.campaign = campaign)
+    );
+
     // related array for Current Product
-    curProduct.campaign = campaign;
     curProduct.related = [nexProduct.positionInProducts];
 
     // discount for Next Product
-    nexProduct.campaign = campaign;
     nexProduct.discount = nexProduct.productPrice / 2;
   }
 
@@ -99,28 +100,19 @@ function reduceFiveDollarsForEveryProductWithThreeAnyProducts(
       index + 3
     );
 
-    // the first product
-    const firProduct = chunkInThreeProducts[0];
-    // the second product
-    const secProduct = chunkInThreeProducts[1];
-    // the third product
-    const thiProduct = chunkInThreeProducts[2];
+    chunkInThreeProducts.forEach((product = {}) => {
+      product.campaign = campaign;
+      product.discount = 5;
+    });
 
-    // the first product
-    firProduct.campaign = campaign;
-    firProduct.discount = 5;
+    // need the related field in firProduct
+    const firProduct = chunkInThreeProducts[0];
+    const secProduct = chunkInThreeProducts[1];
+    const thiProduct = chunkInThreeProducts[2];
     firProduct.related = [
       secProduct.positionInProducts,
       thiProduct.positionInProducts,
     ];
-
-    // the second product
-    secProduct.campaign = campaign;
-    secProduct.discount = 5;
-
-    // the third product
-    thiProduct.campaign = campaign;
-    thiProduct.discount = 5;
   }
 
   return productsToProcessWithCampaignRule;
@@ -151,6 +143,10 @@ const utilGetProcessedProducts = (productListArray = [], productsData = {}) => {
       (product = {}) => !product["processed"]
     );
     const campaignNo = index + 1;
+
+    // unify the interface for $campaign.processFunc
+    //    => (productsToProcess = [], campaignNo = 0): (productsHaveProcessed =[])
+    // so that can iterate campaigns and apply the processFunc
     const productsHaveProcessed = campaigns[campaign].processFunc(
       productsToProcess,
       campaignNo
@@ -159,11 +155,6 @@ const utilGetProcessedProducts = (productListArray = [], productsData = {}) => {
   });
 
   return productsCloneDeeped;
-  // const total = productsCloneDeeped.reduce((accuTotal = 0, product = {}) => {
-  //   const { productPrice = 0, discount = 0 } = product;
-  //   return (accuTotal += productPrice - discount);
-  // }, 0);
-  // return total;
 };
 
 export default utilGetProcessedProducts;

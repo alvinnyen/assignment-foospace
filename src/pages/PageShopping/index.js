@@ -8,9 +8,6 @@ import ButtonCheckout from "./components/ButtonCheckout";
 
 import "./PageShopping.css";
 
-// TODO: check、error handling
-// TODO: thought: 確保資料庫拿來的欄位都正確才render
-
 export default () => {
   const [productList, setProductList] = useState("");
   const [products, setProducts] = useState([]);
@@ -26,6 +23,9 @@ export default () => {
         price: productPrice = 0,
       } = productsFromApi[productId];
 
+      // ensure the fields of a product from api/database are fine,
+      // then push it to the products array,
+      // so that can be rendered properly later
       productName &&
         productPrice > 0 &&
         products.push({
@@ -41,11 +41,8 @@ export default () => {
 
   const renderProducts = (products = []) => {
     return products.map((product = {}) => {
-      // console.log(product);
       return <Product key={product.productId} product={product} />;
     });
-    // console.log("length", productComponents.length);
-    // return [...productComponents];
   };
 
   const contextValueForContextProductList = {
