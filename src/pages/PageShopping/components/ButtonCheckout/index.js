@@ -6,22 +6,24 @@ export default (props = {}) => {
     <ConsumerContextProductList>
       {(value = {}) => {
         const { productList = "", setProductList = () => {} } = value;
+        const buttonDisabled = !productList;
 
         const handleCheckoutButtOnClick = () => {
-          const productListArray =
-            (productList && productList.split(",")) || [];
+          const productListArray = productList.split(",");
           const { productsData = {} } = props;
           // console.log(productList);
           // console.log(productListArray);
           // console.log(productsData);
           // console.log(" ");
-          utilCheckout(productListArray, productsData);
+          const total = utilCheckout(productListArray, productsData);
+          console.log(total);
         };
 
         return (
           <button
             className="checkout-button"
             onClick={handleCheckoutButtOnClick}
+            disabled={buttonDisabled}
           >
             Checkout
           </button>
