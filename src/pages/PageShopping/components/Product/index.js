@@ -10,7 +10,7 @@ export default (props = {}) => {
   return (
     <ConsumerContextProductList>
       {(value = {}) => {
-        const handleOnClick = () => {
+        const handleProductOnClick = () => {
           const {
             productList: prevProductList = "",
             setProductList = () => {},
@@ -22,7 +22,7 @@ export default (props = {}) => {
           setProductList(productList);
         };
         return (
-          <div className="wrapper" onClick={handleOnClick}>
+          <div className="wrapper" onClick={handleProductOnClick}>
             <div>product name: {productName}</div>
             <div>product price: {productPrice}</div>
           </div>

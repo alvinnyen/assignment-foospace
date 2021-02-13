@@ -37,7 +37,7 @@ export default () => {
 
   const renderProducts = (products = []) => {
     return products.map((product = {}) => {
-      console.log(product);
+      // console.log(product);
       return <Product key={product.productId} product={product} />;
     });
     // console.log("length", productComponents.length);
@@ -49,7 +49,7 @@ export default () => {
     setProductList,
   };
 
-  const handleClearProductList = () => {
+  const handleClearProductListButtonOnClick = () => {
     setProductList("");
   };
 
@@ -61,7 +61,9 @@ export default () => {
       </ContextProductListProvider>
       <div>product list: {productList || "no products in the list"}</div>
       <ButtonCheckout />
-      <button onClick={handleClearProductList}>Clear Product List</button>
+      <button onClick={handleClearProductListButtonOnClick}>
+        Clear Product List
+      </button>
     </div>
   );
 };
