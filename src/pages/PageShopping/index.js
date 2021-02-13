@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { apiGetProducts } from "../../apis/products/apiProducts";
 
+import Product from "./components/Product";
+
 // TODO: check、error handling
 // TODO: thought: 確保資料庫拿來的欄位都正確才render
 
@@ -27,9 +29,19 @@ export default () => {
     setProduct(products);
   }, []);
 
+  const renderProducts = (products = []) => {
+    return products.map((product = {}) => {
+      console.log(product);
+      return <Product key={product.productId} product={product} />;
+    });
+    // console.log("length", productComponents.length);
+    // return [...productComponents];
+  };
+
   return (
     <div>
       <div>PageShopping</div>
+      {renderProducts(products)}
     </div>
   );
 };
