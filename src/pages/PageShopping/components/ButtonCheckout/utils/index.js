@@ -29,8 +29,53 @@ const getCampaigns = () => {
 };
 
 function buyOneGetOneInHalfPrice(productsToProcess = []) {
-  console.log("buyOneGetOneInHalfPrice");
-  console.log(" ");
+  const campaign = "buyOneGetOneInHalfPrice";
+  const getProductsGroupByProductId = (productsToProcess = []) => {
+    return productsToProcess.reduce(
+      (productsGroupByProductId = {}, product = {}) => {
+        const { productId = "" } = product;
+        if (!productsGroupByProductId[productId]) {
+          productsGroupByProductId[productId] = [product];
+        } else {
+          productsGroupByProductId[productId].push(product);
+        }
+
+        return productsGroupByProductId;
+      },
+      {}
+    );
+  };
+  const productsGroupByProductId = getProductsGroupByProductId(
+    productsToProcess
+  );
+  const productsToProcessWithCampaignRule = [];
+
+  for (let productId in productsGroupByProductId) {
+    const productsInProductId = productsGroupByProductId[productId];
+    if (productsInProductId.length < 2) continue;
+    if (productsInProductId.length % 2 === 0) {
+      productsToProcessWithCampaignRule.push(...productsInProductId.splice(0));
+    } else {
+      productsToProcessWithCampaignRule.push(
+        ...productsInProductId.splice(0, productsInProductId.length - 1)
+      );
+    }
+  }
+
+  for (let i = 0; i < productsToProcessWithCampaignRule.length; i += 2) {
+    const curProduct = productsToProcessWithCampaignRule[i];
+    const nexProduct = productsToProcessWithCampaignRule[i + 1];
+
+    // related array for Current Product
+    curProduct.campaign = campaign;
+    curProduct.related = [nexProduct.positionInProducts];
+
+    // discount for Next Product
+    nexProduct.campaign = campaign;
+    nexProduct.discount = nexProduct.price / 2;
+  }
+
+  return productsToProcessWithCampaignRule;
 }
 
 function reduceFiveDollarsForEveryProductWithThreeAnyProducts(
