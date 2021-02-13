@@ -24,14 +24,14 @@ function App() {
         return <PageShopping />;
     }
   };
-  const contextValueForPageContext = {
+  const contextValueForContextPage = {
     page,
     pageSetter,
   };
 
   return (
     <div className="App">
-      <ContextPageProvider value={contextValueForPageContext}>
+      <ContextPageProvider value={contextValueForContextPage}>
         {renderPage(page)}
       </ContextPageProvider>
     </div>

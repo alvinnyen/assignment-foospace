@@ -1,4 +1,6 @@
-import "./product.css";
+import "./Product.css";
+
+import { Consumer as ConsumerContextProductList } from "../../../../contexts/ContextProductList";
 
 export default (props = {}) => {
   const {
@@ -6,9 +8,26 @@ export default (props = {}) => {
   } = props;
   if (!productId || !productName || !productPrice) return null;
   return (
-    <div className="wrapper">
-      <div>product name: {productName}</div>
-      <div>product price: {productPrice}</div>
-    </div>
+    <ConsumerContextProductList>
+      {(value = {}) => {
+        const handleOnClick = () => {
+          const {
+            productList: prevProductList = "",
+            setProductList = () => {},
+          } = value;
+          const productList = prevProductList
+            ? prevProductList + "," + productId
+            : productId;
+
+          setProductList(productList);
+        };
+        return (
+          <div className="wrapper" onClick={handleOnClick}>
+            <div>product name: {productName}</div>
+            <div>product price: {productPrice}</div>
+          </div>
+        );
+      }}
+    </ConsumerContextProductList>
   );
 };
