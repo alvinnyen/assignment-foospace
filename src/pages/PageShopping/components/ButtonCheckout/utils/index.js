@@ -7,7 +7,7 @@ const loadProduct = (productListArray = [], productsData = {}) => {
       productId,
       productName,
       productPrice,
-      positionInProducts: index,
+      positionInProducts: index + 1,
     };
   });
 };
@@ -28,8 +28,8 @@ const getCampaigns = () => {
   return campaigns;
 };
 
-function buyOneGetOneInHalfPrice(productsToProcess = []) {
-  const campaign = "buyOneGetOneInHalfPrice";
+function buyOneGetOneInHalfPrice(productsToProcess = [], campaignNo = 0) {
+  const campaign = "優惠活動" + campaignNo;
   const getProductsGroupByProductId = (productsToProcess = []) => {
     return productsToProcess.reduce(
       (productsGroupByProductId = {}, product = {}) => {
@@ -79,9 +79,10 @@ function buyOneGetOneInHalfPrice(productsToProcess = []) {
 }
 
 function reduceFiveDollarsForEveryProductWithThreeAnyProducts(
-  productsToProcess = []
+  productsToProcess = [],
+  campaignNo = 0
 ) {
-  const campaign = "reduceFiveDollarsForEveryProductWithThreeAnyProducts";
+  const campaign = "優惠活動" + campaignNo;
   const productsToProcessLength = productsToProcess.length;
   const productsToProcessWithCampaignRule = productsToProcess.slice(
     0,
@@ -145,12 +146,14 @@ const utilGetProcessedProducts = (productListArray = [], productsData = {}) => {
   const campaignPriorities = getCampaignPriorities();
 
   let productsCloneDeeped = cloneDeep(products);
-  campaignPriorities.forEach((campaign = "") => {
+  campaignPriorities.forEach((campaign = "", index) => {
     const productsToProcess = productsCloneDeeped.filter(
       (product = {}) => !product["processed"]
     );
+    const campaignNo = index + 1;
     const productsHaveProcessed = campaigns[campaign].processFunc(
-      productsToProcess
+      productsToProcess,
+      campaignNo
     );
     markProcessedForTheProducts(productsHaveProcessed);
   });
