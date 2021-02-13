@@ -173,7 +173,7 @@ const utilGetProcessedProducts = (productListArray = [], productsData = {}) => {
       (product = {}) => !product["processed"]
     );
     const campaignNo = index + 1;
-    const campaignWording = "優惠活動" + (campaignNo || "");
+    const campaignWording = "優惠活動 " + (campaignNo || "");
 
     // unify the interface for $campaign.processFunc
     //    => (productsToProcess = [], campaign = ''): (productsHaveProcessed =[])

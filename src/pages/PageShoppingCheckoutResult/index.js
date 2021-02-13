@@ -16,9 +16,9 @@ export default () => {
   const getCampaignWording = (data = {}) => {
     const { campaign = "", related = [] } = data;
     if (related.length) {
-      return `與第${related.join("、")}項組合成${campaign}`;
+      return `(與第 ${related.join("、")} 項組合成${campaign})`;
     }
-    return campaign;
+    return `(${campaign})`;
   };
   const dataRows = processedProducts.map((processedProduct = {}, index) => {
     const {
