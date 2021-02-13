@@ -139,7 +139,7 @@ const markProcessedForTheProducts = (productsHaveProcessed = []) =>
     (product = {}) => (product["processed"] = true)
   );
 
-export default (productListArray = [], productsData = {}) => {
+const utilGetProcessedProducts = (productListArray = [], productsData = {}) => {
   const products = loadProduct(productListArray, productsData);
   const campaigns = getCampaigns();
   const campaignPriorities = getCampaignPriorities();
@@ -155,9 +155,12 @@ export default (productListArray = [], productsData = {}) => {
     markProcessedForTheProducts(productsHaveProcessed);
   });
 
-  const total = productsCloneDeeped.reduce((accuTotal = 0, product = {}) => {
-    const { productPrice = 0, discount = 0 } = product;
-    return (accuTotal += productPrice - discount);
-  }, 0);
-  return total;
+  return productsCloneDeeped;
+  // const total = productsCloneDeeped.reduce((accuTotal = 0, product = {}) => {
+  //   const { productPrice = 0, discount = 0 } = product;
+  //   return (accuTotal += productPrice - discount);
+  // }, 0);
+  // return total;
 };
+
+export default utilGetProcessedProducts;
