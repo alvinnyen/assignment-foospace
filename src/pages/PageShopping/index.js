@@ -4,6 +4,7 @@ import { apiGetProducts } from "../../apis/products/apiProducts";
 import { Provider as ContextProductListProvider } from "../../contexts/ContextProductList";
 
 import Product from "./components/Product";
+import ButtonCheckout from "./components/ButtonCheckout";
 
 import "./PageShopping.css";
 
@@ -59,7 +60,7 @@ export default () => {
         {renderProducts(products)}
       </ContextProductListProvider>
       <div>product list: {productList || "no products in the list"}</div>
-      <button className="checkout-button">Checkout</button>
+      <ButtonCheckout />
       <button onClick={handleClearProductList}>Clear Product List</button>
     </div>
   );
