@@ -1,0 +1,6 @@
+.table {
+  border: red 2px solid;
+}
+.cell {
+  display: inline-block;
+}
