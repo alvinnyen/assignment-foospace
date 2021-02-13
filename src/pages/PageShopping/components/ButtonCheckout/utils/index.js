@@ -1,6 +1,38 @@
 import cloneDeep from "lodash/cloneDeep";
 
-const loadProduct = (productListArray = [], productsData = {}) => {
+/**
+ *
+ * @param {Array} productListArray The value from productList.split(',')
+ * example of productListArray
+ * => ['003', '001', '003', '004', '001']
+ *
+ * @param {Object} productsData Products in product ids.
+ * example of productsData
+ * => {
+ *  001: {productName: "Cola", productPrice: 45}
+ *  002: {productName: "Royal", productPrice: 50}
+ *  003: {productName: "Sprite", productPrice: 55}
+ *  004: {productName: "Fanta", productPrice: 60}
+ *  005: {productName: "Lemon Tea", productPrice: 35}
+ * }
+ *
+ * @returns {Array} Returns products array.
+ * @example
+ * example of products
+ * => [{
+ *   positionInProducts: 1
+ *   productId: "002"
+ *   productName: "Royal"
+ *   productPrice: 50
+ * },
+ * {
+ *   positionInProducts: 1
+ *   productId: "002"
+ *   productName: "Royal"
+ *   productPrice: 50
+ * }]
+ */
+const loadProducts = (productListArray = [], productsData = {}) => {
   return productListArray.map((productId = "", index) => {
     const { productName = "", productPrice = 0 } = productsData[productId];
     return {
@@ -27,8 +59,7 @@ const getCampaigns = () => {
   return campaigns;
 };
 
-function buyOneGetOneInHalfPrice(productsToProcess = [], campaignNo = 0) {
-  const campaign = "優惠活動" + campaignNo;
+function buyOneGetOneInHalfPrice(productsToProcess = [], campaign = "") {
   const getProductsGroupByProductId = (productsToProcess = []) => {
     return productsToProcess.reduce(
       (productsGroupByProductId = {}, product = {}) => {
@@ -81,9 +112,8 @@ function buyOneGetOneInHalfPrice(productsToProcess = [], campaignNo = 0) {
 
 function reduceFiveDollarsForEveryProductWithThreeAnyProducts(
   productsToProcess = [],
-  campaignNo = 0
+  campaign = ""
 ) {
-  const campaign = "優惠活動" + campaignNo;
   const productsToProcessLength = productsToProcess.length;
   const productsToProcessWithCampaignRule = productsToProcess.slice(
     0,
@@ -133,7 +163,7 @@ const markProcessedForTheProducts = (productsHaveProcessed = []) =>
   );
 
 const utilGetProcessedProducts = (productListArray = [], productsData = {}) => {
-  const products = loadProduct(productListArray, productsData);
+  const products = loadProducts(productListArray, productsData);
   const campaigns = getCampaigns();
   const campaignPriorities = getCampaignPriorities();
 
@@ -143,14 +173,15 @@ const utilGetProcessedProducts = (productListArray = [], productsData = {}) => {
       (product = {}) => !product["processed"]
     );
     const campaignNo = index + 1;
+    const campaignWording = "優惠活動" + (campaignNo || "");
 
     // unify the interface for $campaign.processFunc
-    //    => (productsToProcess = [], campaignNo = 0): (productsHaveProcessed =[])
+    //    => (productsToProcess = [], campaign = ''): (productsHaveProcessed =[])
     // so that can iterate campaigns and apply the processFunc
-    const productsHaveProcessed = campaigns[campaign].processFunc(
-      productsToProcess,
-      campaignNo
-    );
+    const productsHaveProcessed =
+      (productsToProcess.length &&
+        campaigns[campaign].processFunc(productsToProcess, campaignWording)) ||
+      [];
     markProcessedForTheProducts(productsHaveProcessed);
   });
 
