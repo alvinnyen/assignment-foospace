@@ -72,7 +72,7 @@ function buyOneGetOneInHalfPrice(productsToProcess = []) {
 
     // discount for Next Product
     nexProduct.campaign = campaign;
-    nexProduct.discount = nexProduct.price / 2;
+    nexProduct.discount = nexProduct.productPrice / 2;
   }
 
   return productsToProcessWithCampaignRule;
@@ -154,4 +154,10 @@ export default (productListArray = [], productsData = {}) => {
     );
     markProcessedForTheProducts(productsHaveProcessed);
   });
+
+  const total = productsCloneDeeped.reduce((accuTotal = 0, product = {}) => {
+    const { productPrice = 0, discount = 0 } = product;
+    return (accuTotal += productPrice - discount);
+  }, 0);
+  return total;
 };
