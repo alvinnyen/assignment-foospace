@@ -81,8 +81,48 @@ function buyOneGetOneInHalfPrice(productsToProcess = []) {
 function reduceFiveDollarsForEveryProductWithThreeAnyProducts(
   productsToProcess = []
 ) {
-  console.log("reduceFiveDollarsForEveryProductWithThreeAnyProducts");
-  console.log(" ");
+  const campaign = "reduceFiveDollarsForEveryProductWithThreeAnyProducts";
+  const productsToProcessLength = productsToProcess.length;
+  const productsToProcessWithCampaignRule = productsToProcess.slice(
+    0,
+    productsToProcessLength - (productsToProcessLength % 3)
+  );
+
+  for (
+    let index = 0;
+    index < productsToProcessWithCampaignRule.length;
+    index += 3
+  ) {
+    const chunkInThreeProducts = productsToProcessWithCampaignRule.slice(
+      index,
+      index + 3
+    );
+
+    // the first product
+    const firProduct = chunkInThreeProducts[0];
+    // the second product
+    const secProduct = chunkInThreeProducts[1];
+    // the third product
+    const thiProduct = chunkInThreeProducts[2];
+
+    // the first product
+    firProduct.campaign = campaign;
+    firProduct.discount = 5;
+    firProduct.related = [
+      secProduct.positionInProducts,
+      thiProduct.positionInProducts,
+    ];
+
+    // the second product
+    secProduct.campaign = campaign;
+    secProduct.discount = 5;
+
+    // the third product
+    thiProduct.campaign = campaign;
+    thiProduct.discount = 5;
+  }
+
+  return productsToProcessWithCampaignRule;
 }
 
 const getCampaignPriorities = () => {
