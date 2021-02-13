@@ -18,15 +18,27 @@ const getCampaigns = () => {
     // TODO: check 名字在外還在內欄位好，欄位命名是否ＯＫ
     buyOneGetOneInHalfPrice: {
       desc: "同商品第 2 件 5 折",
-      // processFunc: buyOneGetOneInHalfPrice,
+      processFunc: buyOneGetOneInHalfPrice,
     },
     reduceFiveDollarsForEveryProductWithThreeAnyProducts: {
       desc: "任意商品(可相同也可不同)滿 3 件以上每件皆折 5 元",
-      // processFunc: reduceFiveDollarsForEveryProductWithThreeAnyProducts,
+      processFunc: reduceFiveDollarsForEveryProductWithThreeAnyProducts,
     },
   };
   return campaigns;
 };
+
+function buyOneGetOneInHalfPrice(productsToProcess = []) {
+  console.log("buyOneGetOneInHalfPrice");
+  console.log(" ");
+}
+
+function reduceFiveDollarsForEveryProductWithThreeAnyProducts(
+  productsToProcess = []
+) {
+  console.log("reduceFiveDollarsForEveryProductWithThreeAnyProducts");
+  console.log(" ");
+}
 
 const getCampaignPriorities = () => {
   // maybe need to get campaign priorities from somewhere in the future
@@ -46,7 +58,15 @@ export default (productListArray = [], productsData = {}) => {
   const products = loadProduct(productListArray, productsData);
   const campaigns = getCampaigns();
   const campaignPriorities = getCampaignPriorities();
-  let productsCloneDeeped = cloneDeep(products);
 
-  console.log(campaignPriorities);
+  let productsCloneDeeped = cloneDeep(products);
+  campaignPriorities.forEach((campaign = "") => {
+    const productsToProcess = productsCloneDeeped.filter(
+      (product = {}) => !product["processed"]
+    );
+    const productsHaveProcessed = campaigns[campaign].processFunc(
+      productsToProcess
+    );
+    markProcessedForTheProducts(productsHaveProcessed);
+  });
 };
