@@ -1,3 +1,5 @@
+import cloneDeep from "lodash/cloneDeep";
+
 const loadProduct = (productListArray = [], productsData = {}) => {
   return productListArray.map((productId = "", index) => {
     const { productName = "", productPrice = 0 } = productsData[productId];
@@ -35,9 +37,16 @@ const getCampaignPriorities = () => {
   return campaignsInPriorities;
 };
 
+const markProcessedForTheProducts = (productsHaveProcessed = []) =>
+  productsHaveProcessed.forEach(
+    (product = {}) => (product["processed"] = true)
+  );
+
 export default (productListArray = [], productsData = {}) => {
-  let products = loadProduct(productListArray, productsData);
+  const products = loadProduct(productListArray, productsData);
   const campaigns = getCampaigns();
   const campaignPriorities = getCampaignPriorities();
+  let productsCloneDeeped = cloneDeep(products);
+
   console.log(campaignPriorities);
 };
