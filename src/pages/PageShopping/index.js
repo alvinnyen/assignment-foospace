@@ -5,6 +5,8 @@ import { Provider as ContextProductListProvider } from "../../contexts/ContextPr
 
 import Product from "./components/Product";
 
+import "./PageShopping.css";
+
 // TODO: check、error handling
 // TODO: thought: 確保資料庫拿來的欄位都正確才render
 
@@ -46,13 +48,19 @@ export default () => {
     setProductList,
   };
 
+  const handleClearProductList = () => {
+    setProductList("");
+  };
+
   return (
     <div>
       <div>PageShopping</div>
       <ContextProductListProvider value={contextValueForContextProductList}>
         {renderProducts(products)}
       </ContextProductListProvider>
-      <div>product list: {productList || "no product in the list"}</div>
+      <div>product list: {productList || "no products in the list"}</div>
+      <button className="checkout-button">Checkout</button>
+      <button onClick={handleClearProductList}>Clear Product List</button>
     </div>
   );
 };
