@@ -13,10 +13,11 @@ import "./PageShopping.css";
 
 export default () => {
   const [productList, setProductList] = useState("");
-  const [productsData, setProductsData] = useState([]);
+  const [products, setProducts] = useState([]);
+  // const [productsData, setProductsData] = useState([]);
   useEffect(async () => {
     const { products: productsFromApi = {} } = await apiGetProducts();
-    const productsData = [];
+    const products = [];
 
     for (let productId in productsFromApi) {
       const {
@@ -26,17 +27,17 @@ export default () => {
 
       productName &&
         productPrice > 0 &&
-        productsData.push({
+        products.push({
           productId,
           productName,
           productPrice,
         });
     }
-    setProductsData(productsData);
+    setProducts(products);
   }, []);
 
-  const renderProducts = (productsData = []) => {
-    return productsData.map((product = {}) => {
+  const renderProducts = (products = []) => {
+    return products.map((product = {}) => {
       // console.log(product);
       return <Product key={product.productId} product={product} />;
     });
@@ -57,9 +58,10 @@ export default () => {
     <div>
       <div>PageShopping</div>
       <ContextProductListProvider value={contextValueForContextProductList}>
-        {renderProducts(productsData)}
+        {renderProducts(products)}
         <div>product list: {productList || "no products in the list"}</div>
-        <ButtonCheckout productsData={productsData} />
+        {/* <ButtonCheckout productsData={productsData} /> */}
+        <ButtonCheckout />
       </ContextProductListProvider>
       <button onClick={handleClearProductListButtonOnClick}>
         Clear Product List
