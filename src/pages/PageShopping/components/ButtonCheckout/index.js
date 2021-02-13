@@ -19,7 +19,7 @@ export default (props = {}) => {
 
   const buttonDisabled = !productList;
 
-  const handleButtOnCheckoutClick = () => {
+  const handleButtonCheckoutClick = () => {
     const productListArray = productList.split(",");
     const { productsData = {} } = props;
     // console.log(productList);
@@ -39,7 +39,7 @@ export default (props = {}) => {
   return (
     <button
       className="checkout-button"
-      onClick={handleButtOnCheckoutClick}
+      onClick={handleButtonCheckoutClick}
       disabled={buttonDisabled}
     >
       Checkout
