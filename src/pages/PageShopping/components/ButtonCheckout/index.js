@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useContext } from "react";
 
 import { pages } from "../../../../App/App";
@@ -8,7 +9,7 @@ import contextProcessedProducts from "../../../../contexts/ContextProcessedProdu
 
 import utilGetProcessedProducts from "./utils";
 
-export default (props = {}) => {
+const ButtonCheckout = (props = {}) => {
   const { productList = "", setProductList = () => {} } = useContext(
     contextProductList
   );
@@ -42,3 +43,14 @@ export default (props = {}) => {
     </button>
   );
 };
+
+ButtonCheckout.propTypes = {
+  productsData: PropTypes.objectOf(
+    PropTypes.shape({
+      productName: PropTypes.string.isRequired,
+      productPrice: PropTypes.number.isRequired,
+    }).isRequired
+  ).isRequired,
+};
+
+export default ButtonCheckout;

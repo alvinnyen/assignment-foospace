@@ -1,19 +1,19 @@
 import { useContext } from "react";
+import PropTypes from "prop-types";
 
 import contextProductList from "../../../../contexts/ContextProductList";
 
 import "./product.css";
 
-export default (props = {}) => {
-  const {
-    product: { productId = "", productName = "", productPrice = 0 } = {},
-  } = props;
-  if (!productId || !productName || !productPrice) return null;
-
+const Product = (props = {}) => {
   const {
     productList: prevProductList = "",
     setProductList = () => {},
   } = useContext(contextProductList);
+  const {
+    product: { productId = "", productName = "", productPrice = 0 } = {},
+  } = props;
+  if (!productId || !productName || !productPrice) return null;
 
   const handleProductOnClick = () => {
     const productList = prevProductList
@@ -30,3 +30,13 @@ export default (props = {}) => {
     </div>
   );
 };
+
+Product.propTypes = {
+  product: PropTypes.shape({
+    productId: PropTypes.string.isRequired,
+    productName: PropTypes.string.isRequired,
+    productPrice: PropTypes.number.isRequired,
+  }).isRequired,
+};
+
+export default Product;

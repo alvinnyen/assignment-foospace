@@ -1,6 +1,8 @@
+import PropTypes from "prop-types";
+
 import "./Table.css";
 
-export default (props = {}) => {
+const Table = (props = {}) => {
   const { columnWidths = [], headerColumns = [], dataRows = [] } = props;
 
   // it's meaningless to render a table if no data rows
@@ -31,3 +33,13 @@ export default (props = {}) => {
     </div>
   );
 };
+
+Table.propTypes = {
+  columnWidths: PropTypes.arrayOf(PropTypes.string).isRequired,
+  headerColumns: PropTypes.arrayOf(PropTypes.string).isRequired,
+  dataRows: PropTypes.arrayOf(
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
+  ).isRequired,
+};
+
+export default Table;
