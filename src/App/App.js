@@ -4,6 +4,7 @@ import PageShopping from "../pages/PageShopping";
 import PageShoppingCheckoutResult from "../pages/PageShoppingCheckoutResult";
 
 import { Provider as ContextPageProvider } from "../contexts/ContextPage";
+import { Provider as ContextProcessedProductsProvider } from "../contexts/ContextProcessedProducts";
 
 const pages = {
   PAGE_SHOPPING: "PAGE_SHOPPING",
@@ -11,7 +12,8 @@ const pages = {
 };
 
 function App() {
-  const [page, pageSetter] = useState(pages.PAGE_SHOPPING);
+  const [page, setPage] = useState(pages.PAGE_SHOPPING);
+  const [processedProducts, setProcessedProducts] = useState([]);
   const renderPage = (page = "") => {
     const { PAGE_SHOPPING = "", PAGE_SHOPPING_CHECKOUT_RESULT = "" } = pages;
 
@@ -26,13 +28,22 @@ function App() {
   };
   const contextValueForContextPage = {
     page,
-    pageSetter,
+    setPage,
+  };
+
+  const contextValueForContextProcessedProducts = {
+    processedProducts,
+    setProcessedProducts,
   };
 
   return (
     <div className="App">
       <ContextPageProvider value={contextValueForContextPage}>
-        {renderPage(page)}
+        <ContextProcessedProductsProvider
+          value={contextValueForContextProcessedProducts}
+        >
+          {renderPage(page)}
+        </ContextProcessedProductsProvider>
       </ContextPageProvider>
     </div>
   );
