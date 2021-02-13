@@ -10,11 +10,11 @@ export default (props = {}) => {
         const handleCheckoutButtOnClick = () => {
           const productListArray =
             (productList && productList.split(",")) || [];
-          const { productsData = [] } = props;
-          console.log(productList);
-          console.log(productListArray);
-          console.log(productsData);
-          console.log(" ");
+          const { productsData = {} } = props;
+          // console.log(productList);
+          // console.log(productListArray);
+          // console.log(productsData);
+          // console.log(" ");
           utilCheckout(productListArray, productsData);
         };
 
