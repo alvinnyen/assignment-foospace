@@ -35,7 +35,7 @@ const ButtonCheckout = (props = {}) => {
 
   return (
     <button
-      className="checkout-button"
+      className="button-checkout"
       onClick={handleButtonCheckoutClick}
       disabled={buttonDisabled}
     >

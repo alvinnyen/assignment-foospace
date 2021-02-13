@@ -1,7 +1,5 @@
 import PropTypes from "prop-types";
 
-import "./Table.css";
-
 const Table = (props = {}) => {
   const { columnWidths = [], headerColumns = [], dataRows = [] } = props;
 
@@ -12,9 +10,10 @@ const Table = (props = {}) => {
     return columns.map((column = "", index) => {
       const style = {
         width: columnWidths[index] || `${100 / columns.length}%`,
+        display: "inline-block",
       };
       return (
-        <div key={index} className="cell" style={style}>
+        <div key={index} style={style}>
           {column}
         </div>
       );
@@ -26,7 +25,7 @@ const Table = (props = {}) => {
   };
 
   return (
-    <div className="table">
+    <div>
       {renderColumns(headerColumns, columnWidths)}
       <hr />
       {renderRows(dataRows, columnWidths)}

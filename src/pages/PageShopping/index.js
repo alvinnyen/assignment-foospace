@@ -56,10 +56,12 @@ export default () => {
 
   return (
     <div>
-      <div>PageShopping</div>
+      <h1>PageShopping</h1>
       <ContextProductListProvider value={contextValueForContextProductList}>
         {renderProducts(products)}
-        <div>product list: {productList || "no products in the list"}</div>
+        <div className="product-list">
+          product list: {productList || "no products in the list"}
+        </div>
         <ButtonCheckout productsData={productsData} />
       </ContextProductListProvider>
       <button onClick={handleClearProductListButtonOnClick}>

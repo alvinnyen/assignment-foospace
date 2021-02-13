@@ -5,6 +5,8 @@ import ButtonBack from "./components/ButtonBack";
 
 import contextProcessedProducts from "../../contexts/ContextProcessedProducts";
 
+import "./PageShoppingCheckoutResult.css";
+
 export default () => {
   const { processedProducts = [] } = useContext(contextProcessedProducts);
 
@@ -50,13 +52,13 @@ export default () => {
 
   return (
     <div>
-      <div>PageShoppingCheckoutResult</div>
+      <h1>PageShoppingCheckoutResult</h1>
       <Table
         columnWidths={columnWidths}
         headerColumns={headerColumns}
         dataRows={dataRows}
       />
-      <div>{totalWithTheWording}</div>
+      <div className="total-with-the-wording">{totalWithTheWording}</div>
       <ButtonBack />
     </div>
   );
