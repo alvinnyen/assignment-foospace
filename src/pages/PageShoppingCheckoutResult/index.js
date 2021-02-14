@@ -18,7 +18,7 @@ export default () => {
     if (related.length) {
       return `(與第 ${related.join("、")} 項組合成${campaign})`;
     }
-    return `(${campaign})`;
+    return (campaign && `(${campaign})`) || "";
   };
   const dataRows = processedProducts.map((processedProduct = {}, index) => {
     const {
