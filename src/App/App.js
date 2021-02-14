@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import PageShopping from "../pages/PageShopping";
 import PageShoppingCheckoutResult from "../pages/PageShoppingCheckoutResult";
+import Composer from "./hocs/Composer";
 
 import { Provider as ContextPageProvider } from "../contexts/ContextPage";
 import { Provider as ContextProcessedProductsProvider } from "../contexts/ContextProcessedProducts";
@@ -14,6 +15,7 @@ const pages = {
 function App() {
   const [page, setPage] = useState(pages.PAGE_SHOPPING);
   const [processedProducts, setProcessedProducts] = useState([]);
+
   const renderPage = (page = "") => {
     const { PAGE_SHOPPING = "", PAGE_SHOPPING_CHECKOUT_RESULT = "" } = pages;
 
@@ -26,25 +28,27 @@ function App() {
         return <PageShopping />;
     }
   };
-  const contextValueForContextPage = {
-    page,
-    setPage,
-  };
 
-  const contextValueForContextProcessedProducts = {
-    processedProducts,
-    setProcessedProducts,
-  };
+  const contexts = [
+    {
+      contextProvider: ContextPageProvider,
+      contextValue: {
+        page,
+        setPage,
+      },
+    },
+    {
+      contextProvider: ContextProcessedProductsProvider,
+      contextValue: {
+        processedProducts,
+        setProcessedProducts,
+      },
+    },
+  ];
 
   return (
     <div className="App">
-      <ContextPageProvider value={contextValueForContextPage}>
-        <ContextProcessedProductsProvider
-          value={contextValueForContextProcessedProducts}
-        >
-          {renderPage(page)}
-        </ContextProcessedProductsProvider>
-      </ContextPageProvider>
+      <Composer contexts={contexts}>{renderPage(page)}</Composer>
     </div>
   );
 }
