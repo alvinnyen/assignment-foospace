@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { apiGetProducts } from "../../apis/products/apiProducts";
+import { useContext, useState } from "react";
 
+import contextProducts from "../../contexts/ContextProducts";
+import contextProductsData from "../../contexts/ContextProductsData";
 import { Provider as ContextProductListProvider } from "../../contexts/ContextProductList";
 
 import Product from "./components/Product";
@@ -10,34 +11,8 @@ import "./PageShopping.css";
 
 export default () => {
   const [productList, setProductList] = useState("");
-  const [products, setProducts] = useState([]);
-  const [productsData, setProductsData] = useState({});
-  useEffect(async () => {
-    const { products: productsFromApi = {} } = await apiGetProducts();
-    const products = [];
-    const productsData = {};
-
-    for (let productId in productsFromApi) {
-      const {
-        name: productName = "",
-        price: productPrice = 0,
-      } = productsFromApi[productId];
-
-      // ensure the fields of a product from api/database are fine,
-      // then push it to the products array,
-      // so that can be rendered properly later
-      productName &&
-        productPrice > 0 &&
-        products.push({
-          productId,
-          productName,
-          productPrice,
-        }) &&
-        (productsData[productId] = { productName, productPrice });
-    }
-    setProducts(products);
-    setProductsData(productsData);
-  }, []);
+  const { products = [] } = useContext(contextProducts);
+  const { productsData = {} } = useContext(contextProductsData);
 
   const renderProducts = (products = []) => {
     return products.map((product = {}) => {
