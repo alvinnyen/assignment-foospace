@@ -27,8 +27,10 @@ function App() {
       const { products: productsFromApi = {} } = await apiGetProducts();
       const products = [];
       const productsData = {};
+      const regForProductId = /[0-9]{3}/g;
 
       for (let productId in productsFromApi) {
+        if (!regForProductId.test(productId)) continue;
         const {
           name: productName = "",
           price: productPrice = 0,
