@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 
+import contextPage from "../../contexts/ContextPage";
 import contextProducts from "../../contexts/ContextProducts";
 import contextProductsData from "../../contexts/ContextProductsData";
 import { Provider as ContextProductListProvider } from "../../contexts/ContextProductList";
@@ -11,14 +12,9 @@ import "./PageShopping.css";
 
 export default () => {
   const [productList, setProductList] = useState("");
+  const { page = {} } = useContext(contextPage);
   const { products = [] } = useContext(contextProducts);
   const { productsData = {} } = useContext(contextProductsData);
-
-  const renderProducts = (products = []) => {
-    return products.map((product = {}) => {
-      return <Product key={product.productId} product={product} />;
-    });
-  };
 
   const contextValueForContextProductList = {
     productList,
@@ -29,9 +25,25 @@ export default () => {
     setProductList("");
   };
 
+  const renderPageError = (page = {}) => {
+    const { pageError = "" } = page;
+    if (pageError) {
+      return (
+        <span style={{ color: "red", fontSize: "small" }}>{pageError}</span>
+      );
+    }
+    return "";
+  };
+
+  const renderProducts = (products = []) => {
+    return products.map((product = {}) => {
+      return <Product key={product.productId} product={product} />;
+    });
+  };
+
   return (
     <div>
-      <h1>PageShopping</h1>
+      <h1>PageShopping {renderPageError(page)}</h1>
       <ContextProductListProvider value={contextValueForContextProductList}>
         {renderProducts(products)}
         <div className="product-list">
