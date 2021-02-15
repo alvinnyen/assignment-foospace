@@ -29,11 +29,7 @@ export default () => {
       productsData
     );
 
-    if (
-      processedProducts &&
-      Array.isArray(processedProducts) &&
-      processedProducts.length
-    ) {
+    if (Array.isArray(processedProducts) && processedProducts.length) {
       setProcessedProducts(processedProducts);
       setPage({
         ...pages.PAGE_SHOPPING_CHECKOUT_RESULT,

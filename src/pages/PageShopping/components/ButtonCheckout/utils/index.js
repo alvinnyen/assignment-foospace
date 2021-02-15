@@ -59,20 +59,31 @@ const getCampaigns = () => {
   return campaigns;
 };
 
+const getCampaignPriorities = () => {
+  // maybe need to get campaign priorities from somewhere in the future
+  const campaignsInPriorities = [
+    "buyOneGetOneInHalfPrice",
+    "reduceFiveDollarsForEveryProductWithThreeAnyProducts",
+  ];
+  return campaignsInPriorities;
+};
+
 function buyOneGetOneInHalfPrice(productsToProcess = [], campaign = "") {
   const getProductsGroupByProductId = (productsToProcess = []) => {
-    return productsToProcess.reduce(
-      (productsGroupByProductId = {}, product = {}) => {
-        const { productId = "" } = product;
-        if (!productsGroupByProductId[productId]) {
-          productsGroupByProductId[productId] = [product];
-        } else {
-          productsGroupByProductId[productId].push(product);
-        }
+    return (
+      productsToProcess.reduce(
+        (productsGroupByProductId = {}, product = {}) => {
+          const { productId = "" } = product;
+          if (!productsGroupByProductId[productId]) {
+            productsGroupByProductId[productId] = [product];
+          } else {
+            productsGroupByProductId[productId].push(product);
+          }
 
-        return productsGroupByProductId;
-      },
-      {}
+          return productsGroupByProductId;
+        },
+        {}
+      ) || {}
     );
   };
   const productsGroupByProductId = getProductsGroupByProductId(
@@ -81,7 +92,7 @@ function buyOneGetOneInHalfPrice(productsToProcess = [], campaign = "") {
   const productsToProcessWithCampaignRule = [];
 
   for (let productId in productsGroupByProductId) {
-    const productsInProductId = productsGroupByProductId[productId];
+    const productsInProductId = productsGroupByProductId[productId] || [];
     if (productsInProductId.length < 2) continue;
     if (productsInProductId.length % 2 === 0) {
       productsToProcessWithCampaignRule.push(...productsInProductId.splice(0));
@@ -93,15 +104,17 @@ function buyOneGetOneInHalfPrice(productsToProcess = [], campaign = "") {
   }
 
   for (let i = 0; i < productsToProcessWithCampaignRule.length; i += 2) {
-    const curProduct = productsToProcessWithCampaignRule[i];
-    const nexProduct = productsToProcessWithCampaignRule[i + 1];
+    const curProduct = productsToProcessWithCampaignRule[i] || {};
+    const nexProduct = productsToProcessWithCampaignRule[i + 1] || {};
 
     [curProduct, nexProduct].forEach(
       (product = {}) => (product.campaign = campaign)
     );
 
     // related array for Current Product
-    curProduct.related = [nexProduct.positionInProducts];
+    curProduct.related = nexProduct.positionInProducts && [
+      nexProduct.positionInProducts,
+    ];
 
     // discount for Next Product
     nexProduct.discount = nexProduct.productPrice / 2;
@@ -136,38 +149,28 @@ function reduceFiveDollarsForEveryProductWithThreeAnyProducts(
     });
 
     // need the related field in firProduct
-    const firProduct = chunkInThreeProducts[0];
-    const secProduct = chunkInThreeProducts[1];
-    const thiProduct = chunkInThreeProducts[2];
-    firProduct.related = [
-      secProduct.positionInProducts,
-      thiProduct.positionInProducts,
-    ];
+    const firProduct = chunkInThreeProducts[0] || {};
+    const secProduct = chunkInThreeProducts[1] || {};
+    const thiProduct = chunkInThreeProducts[2] || {};
+    firProduct.related = secProduct.positionInProducts &&
+      thiProduct.positionInProducts && [
+        secProduct.positionInProducts,
+        thiProduct.positionInProducts,
+      ];
   }
 
   return productsToProcessWithCampaignRule;
 }
 
-const getCampaignPriorities = () => {
-  // maybe need to get campaign priorities from somewhere in the future
-  const campaignsInPriorities = [
-    "buyOneGetOneInHalfPrice",
-    "reduceFiveDollarsForEveryProductWithThreeAnyProducts",
-  ];
-  return campaignsInPriorities;
-};
-
-const markProcessedForTheProducts = (productsHaveProcessed = []) =>
-  productsHaveProcessed.forEach(
-    (product = {}) => (product["processed"] = true)
-  );
-
 const utilGetProcessedProducts = (productListArray = [], productsData = {}) => {
-  const products = loadProducts(productListArray, productsData);
-  const campaigns = getCampaigns();
-  const campaignPriorities = getCampaignPriorities();
-
-  let productsCloneDeeped = cloneDeep(products);
+  const products = loadProducts(productListArray, productsData) || [];
+  const campaigns = getCampaigns() || {};
+  const campaignPriorities = getCampaignPriorities() || [];
+  let productsCloneDeeped = cloneDeep(products) || [];
+  const markProcessedForTheProducts = (productsHaveProcessed = []) =>
+    productsHaveProcessed.forEach(
+      (product = {}) => (product["processed"] = true)
+    );
   campaignPriorities.forEach((campaign = "", index) => {
     const productsToProcess = productsCloneDeeped.filter(
       (product = {}) => !product["processed"]
@@ -185,7 +188,7 @@ const utilGetProcessedProducts = (productListArray = [], productsData = {}) => {
     markProcessedForTheProducts(productsHaveProcessed);
   });
 
-  return productsCloneDeeped;
+  return productsCloneDeeped || [];
 };
 
 export default utilGetProcessedProducts;
