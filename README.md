@@ -1,70 +1,164 @@
-# Getting Started with Create React App
+# assignment-foospace
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Run `npm start` to run this app in the development mode, then you can view it by opening [http://localhost:3000](http://localhost:3000) in the browser.
 
-## Available Scripts
+## Assumptions
 
-In the project directory, you can run:
+- for each product
+  - product id: `/[0-9]{3}/g`
+  - product name: !null && !undefined && !''
+  - product price: !null && !undefined && > 0
 
-### `npm start`
+## Error handling
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. For ==Components== contain props, use prop-types to do runtime type checking for React props and similar objects.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+   - use prop-types to document the intended types of properties passed to components and warn in development if they don’t match.
+   - see Product and Table Component
 
-### `npm test`
+2. Filter and make sure ==the data from api== have necessary values
+   2.1. make sure the format of product id match the assumption above. - i.e. `if (!regForProductId.test(productId)) continue;`
+   2.2. make sure the product name and price are not empty and the price must above 0 - i.e.
+   `productName && productPrice > 0 && products.push({ productId, productName, productPrice, }) && (productsData[productId] = { productName, productPrice });`
+   2.3. ==with point 2.1., we can make sure everything will be well later in the process, and don't need to have too many conditional statements or error handlings in the later process or it will decrease readability==
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. With the point 2, we can get the ==products array== contains everything/every field we need and make sure we can render it (renderProducts) properly on the PageShopping as `[Product]`
 
-### `npm run build`
+4. Do the check for the product list, and disable the checkout button if !productList.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- i.e.
+  - `const buttonDisabled = !productList;`
+  - `<button disabled={buttonDisabled} ...`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+5. For campaigns and related utils.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- 5.1. With the point 2, 3, and 4, we can have confident with the product related data, and don't need to have too many conditional statements or error handlings in the later process or it will decrease readability, so that we can focus on dealing with the processes of campaigns.
+- 5.2. Instead of having too many conditional statements or error handlings, use || to set the default values to avoid decreasing readability.
 
-### `npm run eject`
+6. Apply 5.2. in whole project.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Design of campaign process
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Unify the interface for `$campaign.processFunc` like `(productsToProcess = [], campaign = ''): (productsHaveProcessed =[])`, so that can iterate campaigns and apply the processFunc and will be ok if there is any change in ==campaignsInPriorities== (i.e. adjust campaign priority, add other campaigns into it).
+- The example of campaignsInPriorities.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```
+const campaignsInPriorities = [
+    "buyOneGetOneInHalfPrice",
+    "reduceFiveDollarsForEveryProductWithThreeAnyProducts",
+];
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Example of data shape.
 
-## Learn More
+### in the util file
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+#### productListArray
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- The value from productList.split(',').
+- `['003', '001', '003', '004', '001']`
 
-### Code Splitting
+#### productsData
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```
+{
+   001: {productName: "Cola", productPrice: 45}
+   002: {productName: "Royal", productPrice: 50}
+   003: {productName: "Sprite", productPrice: 55}
+   004: {productName: "Fanta", productPrice: 60}
+   005: {productName: "Lemon Tea", productPrice: 35}
+  }
+```
 
-### Analyzing the Bundle Size
+#### products && productsCloneDeeped
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- productsData, the initial value of productsCloneDeeped
 
-### Making a Progressive Web App
+```
+{
+   {
+        positionInProducts: 1,
+        productId: "003",
+        productName: "Sprite",
+        productPrice: 55,
+   },
+   {
+        positionInProducts: 2,
+        productId: "002",
+        productName: "Royal",
+        productPrice: 50,
+   },
+   {
+        positionInProducts: 3,
+        productId: "003",
+        productName: "Sprite",
+        productPrice: 55,
+   },
+   {
+        positionInProducts: 4,
+        productId: "003",
+        productName: "Sprite",
+        productPrice: 55,
+   },
+   {
+        positionInProducts: 5,
+        productId: "004",
+        productName: "Fanta",
+        productPrice: 60,
+   },
+  }
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- the final result after processing of ==productsCloneDeeped==
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+{
+   {
+       campaign: "優惠活動 1"
+        positionInProducts: 1,
+        processed: true,
+        productId: "003",
+        productName: "Sprite",
+        productPrice: 55,
+        related: [3],
+   },
+   {
+       campaign: "優惠活動 2",
+        discount: 5,
+        positionInProducts: 2,
+        processed: true,
+        productId: "002",
+        productName: "Royal",
+        productPrice: 50,
+        related: [4, 5],
+   },
+   {
+       campaign: "優惠活動 1",
+        discount: 27.5,
+        positionInProducts: 3,
+        processed: true,
+        productId: "003",
+        productName: "Sprite",
+        productPrice: 55,
+   },
+   {
+       campaign: "優惠活動 2",
+        discount: 5,
+        positionInProducts: 4,
+        processed: true,
+        productId: "003",
+        productName: "Sprite",
+        productPrice: 55,
+   },
+   {
+       campaign: "優惠活動 2",
+        discount: 5,
+        positionInProducts: 5,
+        processed: true,
+        productId: "004",
+        productName: "Fanta",
+        productPrice: 60,
+   },
+  }
+```
