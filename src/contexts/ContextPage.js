@@ -1,7 +1,10 @@
 import { createContext } from "react";
 
 const context = createContext({
-  page: "",
+  page: {
+    pageName: "",
+    pageError: "",
+  },
   setPage: () => {},
 });
 export const { Provider, Consumer } = context;

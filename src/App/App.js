@@ -11,9 +11,17 @@ import { Provider as ContextProductsProvider } from "../contexts/ContextProducts
 import { Provider as ContextProductsDataProvider } from "../contexts/ContextProductsData";
 import { Provider as ContextProcessedProductsProvider } from "../contexts/ContextProcessedProducts";
 
+const PAGE_SHOPPING = "PAGE_SHOPPING";
+const PAGE_SHOPPING_CHECKOUT_RESULT = "PAGE_SHOPPING_CHECKOUT_RESULT";
 const pages = {
-  PAGE_SHOPPING: "PAGE_SHOPPING",
-  PAGE_SHOPPING_CHECKOUT_RESULT: "PAGE_SHOPPING_CHECKOUT_RESULT",
+  PAGE_SHOPPING: {
+    pageName: PAGE_SHOPPING,
+    pageError: "",
+  },
+  PAGE_SHOPPING_CHECKOUT_RESULT: {
+    pageName: PAGE_SHOPPING_CHECKOUT_RESULT,
+    pageError: "",
+  },
 };
 
 function App() {
@@ -27,7 +35,7 @@ function App() {
       const { products: productsFromApi = {} } = await apiGetProducts();
       const products = [];
       const productsData = {};
-      const regForProductId = /[0-9]{3}/g;
+      const regForProductId = /[0-9]{3}/;
 
       for (let productId in productsFromApi) {
         if (!regForProductId.test(productId)) continue;
@@ -55,9 +63,9 @@ function App() {
   }, []);
 
   const renderPage = (page = "") => {
-    const { PAGE_SHOPPING = "", PAGE_SHOPPING_CHECKOUT_RESULT = "" } = pages;
+    const { pageName = PAGE_SHOPPING } = page;
 
-    switch (page) {
+    switch (pageName) {
       case PAGE_SHOPPING:
         return <PageShopping />;
       case PAGE_SHOPPING_CHECKOUT_RESULT:

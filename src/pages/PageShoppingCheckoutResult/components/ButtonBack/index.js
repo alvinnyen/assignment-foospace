@@ -8,7 +8,9 @@ export default () => {
   const { setPage = () => {} } = useContext(contextPage);
 
   const handleButtonBackClick = () => {
-    setPage(pages.PAGE_SHOPPING);
+    setPage({
+      ...pages.PAGE_SHOPPING,
+    });
   };
 
   return <button onClick={handleButtonBackClick}>Back</button>;

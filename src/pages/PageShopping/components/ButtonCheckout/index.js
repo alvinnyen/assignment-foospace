@@ -10,8 +10,10 @@ import contextProductsData from "../../../../contexts/ContextProductsData";
 import utilGetProcessedProducts from "./utils";
 
 export default () => {
-  const { productList = "" } = useContext(contextProductList);
-  const { setPage = () => {} } = useContext(contextPage);
+  const { productList = "", setProductList = () => {} } = useContext(
+    contextProductList
+  );
+  const { page, setPage = () => {} } = useContext(contextPage);
   const { productsData = {} } = useContext(contextProductsData);
   const { setProcessedProducts = () => {} } = useContext(
     contextProcessedProducts
@@ -27,8 +29,22 @@ export default () => {
       productsData
     );
 
-    setProcessedProducts(processedProducts);
-    setPage(pages.PAGE_SHOPPING_CHECKOUT_RESULT);
+    if (
+      processedProducts &&
+      Array.isArray(processedProducts) &&
+      processedProducts.length
+    ) {
+      setProcessedProducts(processedProducts);
+      setPage({
+        ...pages.PAGE_SHOPPING_CHECKOUT_RESULT,
+      });
+    } else {
+      setPage({
+        ...page,
+        pageError: "Something wrong!! Pls re-select products.",
+      });
+      setProductList("");
+    }
   };
 
   return (
